@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.5.1)
 
-project(server)
+project(gravyhttp)
 
-#set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Release)
 
 # Will add __FILENAME__ macros for all source files, which is the filename without full find_path
 function(define_file_basename_for_sources targetname)
@@ -21,28 +21,23 @@ function(define_file_basename_for_sources targetname)
     endforeach()
 endfunction()
 
-# Add sources
 file(GLOB SOURCES
     "${PROJECT_SOURCE_DIR}/src/*.cpp"
-    "${PROJECT_SOURCE_DIR}/src/Core/*.cpp"
-    "${PROJECT_SOURCE_DIR}/src/Controllers/*.cpp"
-    "${PROJECT_SOURCE_DIR}/src/Security/*.cpp"
+    "${PROJECT_SOURCE_DIR}/src/Http/*.cpp"
 )
 
-# Specify include Directory
 include_directories(
     "${PROJECT_SOURCE_DIR}/include"
-    "${PROJECT_SOURCE_DIR}/include/Core"
-    "${PROJECT_SOURCE_DIR}/include/Controllers"
-    "${PROJECT_SOURCE_DIR}/include/Security"
+    "${PROJECT_SOURCE_DIR}/include/Http"
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES})
-
-target_include_directories(${PROJECT_NAME} PRIVATE ${OPENSSL_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} -lgravy -lpthread -lstdc++fs ${OPENSSL_LIBRARIES})
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
+target_link_libraries(${PROJECT_NAME} -lgravy -lpthread)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 
 define_file_basename_for_sources(${PROJECT_NAME})
+
+install(TARGETS ${PROJECT_NAME} DESTINATION /usr/local/lib)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION /usr/local/include/GravyHttp)
