@@ -32,6 +32,7 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
+target_compile_definitions(${PROJECT_NAME} PRIVATE GRAVY_USE_OPENSSL)
 target_link_libraries(${PROJECT_NAME} -lgravy -lpthread)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
